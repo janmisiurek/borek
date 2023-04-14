@@ -1,6 +1,7 @@
 import os
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 import time
 
@@ -8,11 +9,17 @@ def login_to_twitter():
     email = os.environ['EMAIL']
     username = os.environ['TWITTER_USERNAME']
     password = os.environ['TWITTER_PASSWORD']
-    
+
     chrome_driver_path = os.path.join(os.getcwd(), 'drivers', 'chromedriver')
     service = Service(executable_path=chrome_driver_path)
 
-    driver = webdriver.Chrome(service=service)
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+
+    driver = webdriver.Chrome(service=service, options=chrome_options)
     driver.get('https://twitter.com/i/flow/login')
     driver.implicitly_wait(10)
     time.sleep(3)
