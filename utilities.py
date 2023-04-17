@@ -10,7 +10,9 @@ def login_to_twitter():
     username = os.environ['TWITTER_USERNAME']
     password = os.environ['TWITTER_PASSWORD']
 
-    chrome_driver_path = os.path.join(os.getcwd(), 'drivers', 'chromedriver')
+    chrome_driver_path = os.environ.get("GOOGLE_CHROME_SHIM", None))
+    chrome_bin = ENV.fetch('GOOGLE_CHROME_SHIM', nil)
+    chrome_options.binary_location = chrome_bin
     service = Service(executable_path=chrome_driver_path)
 
     chrome_options = Options()
@@ -18,7 +20,7 @@ def login_to_twitter():
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-
+    
     driver = webdriver.Chrome(service=service, options=chrome_options)
     driver.get('https://twitter.com/i/flow/login')
     driver.implicitly_wait(10)
