@@ -11,11 +11,11 @@ def login_to_twitter():
     password = os.environ['TWITTER_PASSWORD']
 
     chrome_driver_path = os.environ.get("GOOGLE_CHROME_SHIM", None)
-    chrome_bin = ENV.fetch('GOOGLE_CHROME_SHIM', nil)
-    chrome_options.binary_location = chrome_bin
+    chrome_bin = os.environ.get('GOOGLE_CHROME_SHIM', None)
     service = Service(executable_path=chrome_driver_path)
 
     chrome_options = Options()
+    chrome_options.binary_location = chrome_bin
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--no-sandbox")
