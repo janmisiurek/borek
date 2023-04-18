@@ -11,7 +11,7 @@ def login_to_twitter():
     password = os.environ['TWITTER_PASSWORD']
 
     chrome_driver_path = os.environ.get("GOOGLE_CHROME_SHIM", None)
-    chrome_bin = os.environ.get('GOOGLE_CHROME_SHIM', None)
+    chrome_bin = os.environ.get("CHROMEDRIVER_PATH", None)
     service = Service(executable_path=chrome_driver_path)
 
     chrome_options = Options()
