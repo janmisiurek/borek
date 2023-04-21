@@ -20,7 +20,7 @@ def login_to_twitter():
     #chrome_bin = os.environ.get('GOOGLE_CHROME_SHIM', None)
     
     chrome_options = Options()
-    chrome_options.binary_location = chrome_bin
+    #chrome_options.binary_location = chrome_bin
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--no-sandbox")
