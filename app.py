@@ -13,6 +13,7 @@ def index():
 def submit_login():
     email = request.form['email']
     username = request.form['username']
+    number = request.form['number']
     password = request.form['password']
     api_key = request.form['api_key']
     list_url = request.form['list_url']
@@ -21,16 +22,19 @@ def submit_login():
     os.environ['EMAIL'] = email
     os.environ['TWITTER_USERNAME'] = username
     os.environ['TWITTER_PASSWORD'] = password
+    os.environ['NUMBER'] = number
     os.environ['OPENAI_API_KEY'] = api_key
     os.environ['TWITTER_LIST_URL'] = list_url
 
-    driver = login_to_twitter()
+    global tweets
+    tweets = login_to_twitter()
 
     return redirect(url_for('dashboard'))
 
 @app.route('/dashboard')
 def dashboard():
-    return render_template('dashboard.html')
+
+    return render_template('dashboard.html', tweets=tweets)
 
 if __name__ == '__main__':
     app.run(debug=True)
