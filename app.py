@@ -1,5 +1,4 @@
 import os
-from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for
 from utilities import login_to_twitter, scrap_tweets, add_comments_to_df
