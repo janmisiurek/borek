@@ -1,7 +1,10 @@
 import os
+from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for
-from utilities import login_to_twitter
+from utilities import login_to_twitter, scrap_tweets, add_comments_to_df
+import openai
+import urllib
 
 app = Flask(__name__)
 
@@ -26,15 +29,18 @@ def submit_login():
     os.environ['OPENAI_API_KEY'] = api_key
     os.environ['TWITTER_LIST_URL'] = list_url
 
-    global tweets
-    tweets = login_to_twitter()
+    global driver
+    driver = login_to_twitter()
 
     return redirect(url_for('dashboard'))
 
 @app.route('/dashboard')
 def dashboard():
+    tweets = scrap_tweets(driver)
+    tweets_with_comments = add_comments_to_df(tweets)
 
-    return render_template('dashboard.html', tweets=tweets)
+    return render_template('dashboard.html', tweets=tweets_with_comments)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

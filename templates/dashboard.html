@@ -4,23 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <script>
+        function copyToClipboard(event, text) {
+            event.preventDefault();
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            window.open(event.currentTarget.href, '_blank');
+        }
+    </script>
 </head>
 <body>
-    <h1>Wpisy</h1>
+    <h1>Dashboard</h1>
     <table>
         <thead>
             <tr>
                 <th>Username</th>
                 <th>Date</th>
                 <th>Content</th>
+                <th>Tweet Link</th>
             </tr>
         </thead>
         <tbody>
-            {% for _, tweet in tweets.iterrows() %}
+            {% for tweet in tweets.itertuples() %}
             <tr>
-                <td>{{ wpis['Username'] }}</td>
-                <td>{{ wpis['Date'] }}</td>
-                <td>{{ wpis['Content'] }}</td>
+                <td>{{ tweet.Username }}</td>
+                <td>{{ tweet.Date }}</td>
+                <td>{{ tweet.Content }}</td>
+                <td>{{ tweet.Comment }}</td>
+                <td><a href="{{ tweet.Tweet_Link }}" target="_blank" onclick="copyToClipboard(event, '{{ tweet.Comment|replace("'", "\\'")|replace('"', '\\"') }}')">View Tweet</a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>

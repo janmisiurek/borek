@@ -7,6 +7,7 @@ from selenium.common.exceptions import NoSuchElementException
 import chromedriver_autoinstaller
 import pandas as pd
 import time
+import openai
 
 def login_to_twitter():
     chromedriver_autoinstaller.install()
@@ -15,6 +16,7 @@ def login_to_twitter():
     username = os.environ['TWITTER_USERNAME']
     password = os.environ['TWITTER_PASSWORD']
     number = os.environ['NUMBER']
+    
 
     #chrome_driver_path = os.environ.get("CHROMEDRIVER_PATH", None)
     #chrome_bin = os.environ.get('GOOGLE_CHROME_SHIM', None)
@@ -49,13 +51,17 @@ def login_to_twitter():
     driver.switch_to.active_element.send_keys(password)
     time.sleep(0.5)
     driver.switch_to.active_element.send_keys(Keys.ENTER)
-    time.sleep(5)
+    time.sleep(2)
     driver.switch_to.active_element.send_keys(number)
     time.sleep(1)
     driver.switch_to.active_element.send_keys(Keys.ENTER)
-    time.sleep(2)
+    time.sleep(5)
 
-    # open list link in new tab
+    return driver
+
+def scrap_tweets(driver):
+
+    # Open the list URL in a new tab
     driver.execute_script("window.open('');")
     driver.switch_to.window(driver.window_handles[1])
     twitter_list_url = 'https://twitter.com/i/lists/1638664477859106816'
@@ -64,20 +70,40 @@ def login_to_twitter():
     driver.switch_to.active_element.send_keys(Keys.END)
     time.sleep(5)
 
-    
     # scrap and convert tweets to pandas dataframe
     tweets = driver.find_elements("xpath", '//div[@data-testid]//article[@data-testid="tweet"]')
-    
     
     data = []
     for tweet in tweets:
         try:
             username = tweet.find_element("xpath", './/div[@dir="ltr"]/span').text
             date = tweet.find_element("xpath", './/time').get_attribute('datetime')
-            content = tweet.find_element("xpath", './/div[@data-testid="tweetText"]').text  # Zaktualizowany selektor XPath
-            data.append([username, date, content])
+            content = tweet.find_element("xpath", './/div[@data-testid="tweetText"]').text
+            permalink = tweet.find_element("xpath", './/a[contains(@href, "/status/")]').get_attribute('href')
+            data.append([username, date, content, permalink])
         except NoSuchElementException:
             continue
-    df = pd.DataFrame(data, columns=['Username', 'Date', 'Content'])
-    
+
+    df = pd.DataFrame(data, columns=['Username', 'Date', 'Content', 'Tweet_Link'])
+
+    return df
+
+def generate_comment(content):
+
+    openai.api_key = os.environ["OPENAI_API_KEY"]
+
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": f"Based on the following tweet content, suggest a relevant comment:\n\nTweet: {content}"}
+        ]
+    )
+
+    generated_comment = response.choices[0].message['content'].strip()
+    return generated_comment
+
+
+def add_comments_to_df(df):
+    df['Comment'] = df['Content'].apply(generate_comment)
     return df
