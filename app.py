@@ -35,6 +35,7 @@ def submit_login():
 
 @app.route('/dashboard')
 def dashboard():
+    global driver
     tweets = scrap_tweets(driver)
     tweets_with_comments = add_comments_to_df(tweets)
 
