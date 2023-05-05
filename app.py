@@ -66,6 +66,7 @@ def dashboard():
 
     # Pobierz nowe tweety
     tweets = uti.scrap_tweets(driver)
+    print(tweets)
 
     # Oznacz tweety jako nowe, jeśli nie istnieją w ostatnich tweetach
     tweets['is_new'] = tweets['Tweet_Link'].apply(
@@ -74,6 +75,7 @@ def dashboard():
 
     # Dodaj komentarze tylko do nowych tweetów
     new_tweets_with_comments = uti.add_comments_to_df(tweets[tweets['is_new']])
+    print(new_tweets_with_comments)
 
     # Połącz stare i nowe tweety z komentarzami
     all_tweets_with_comments = pd.merge(
@@ -82,6 +84,7 @@ def dashboard():
         on='Tweet_Link',
         how='left'
     )
+    print(all_tweets_with_comments)
 
     # Zapisz połączone tweety z komentarzami do pliku CSV
     all_tweets_with_comments.to_csv('last_tweets.csv', index=False)
