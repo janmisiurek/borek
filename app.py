@@ -42,7 +42,14 @@ def dashboard():
 
     # Wczytaj ostatnie tweety z pliku CSV, jeśli istnieje
     if os.path.exists('last_tweets.csv'):
-        last_tweets = pd.read_csv('last_tweets.csv')
+        try:
+            last_tweets = pd.read_csv('last_tweets.csv')
+            if 'Tweet_Link' not in last_tweets.columns:
+                print("Brakuje kolumny 'Tweet_Link' w last_tweets.csv")
+                last_tweets = pd.DataFrame()
+        except pd.errors.EmptyDataError:
+            print("Plik last_tweets.csv jest pusty lub ma nieprawidłowy format")
+            last_tweets = pd.DataFrame()
     else:
         last_tweets = pd.DataFrame()
 
@@ -70,6 +77,7 @@ def dashboard():
 
     # Renderuj szablon HTML z tweetami i komentarzami
     return render_template('dashboard.html', tweets=all_tweets_with_comments)
+
 
 
 if __name__ == '__main__':
