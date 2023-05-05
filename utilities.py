@@ -67,9 +67,12 @@ def login_to_twitter():
 def scrap_tweets(driver):
 
     # Open the list URL in a new tab
+    print('opening new tab')
     driver.execute_script("window.open('');")
+    print('switching to new tab')
     driver.switch_to.window(driver.window_handles[1])
     twitter_list_url = 'https://twitter.com/i/lists/1638664477859106816'
+    print('opening list')
     driver.get(twitter_list_url)
     time.sleep(4)
     driver.switch_to.active_element.send_keys(Keys.END)
@@ -77,7 +80,7 @@ def scrap_tweets(driver):
 
     # scrap and convert tweets to pandas dataframe
     tweets = driver.find_elements("xpath", '//div[@data-testid]//article[@data-testid="tweet"]')
-    
+    print('raw tweets:', tweets)
     data = []
     for tweet in tweets:
         try:
