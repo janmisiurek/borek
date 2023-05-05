@@ -75,9 +75,13 @@ def dashboard():
     # Zapisz połączone tweety z komentarzami do pliku CSV
     all_tweets_with_comments.to_csv('last_tweets.csv', index=False)
 
+    print("all_tweets_with_comments:\n", all_tweets_with_comments.head())  # Dodano tutaj
+
     # Renderuj szablon HTML z tweetami i komentarzami
     return render_template('dashboard.html', tweets=all_tweets_with_comments)
 
+if __name__ == '__main__':
+    app.run(debug=True)
 
 
 if __name__ == '__main__':
