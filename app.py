@@ -1,4 +1,7 @@
 import os
+import chromedriver_autoinstaller
+from selenium.webdriver.chrome.options import Options
+from selenium import webdriver
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for
 import utilities as uti
@@ -7,7 +10,15 @@ import urllib
 import pandas as pd
 
 app = Flask(__name__)
-driver = None
+
+chromedriver_autoinstaller.install()
+chrome_options = Options()
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--disable-gpu")
+chrome_options.add_argument("--no-sandbox")
+chrome_options.add_argument("--disable-dev-shm-usage")
+driver = webdriver.Chrome(options=chrome_options)
+
 
 @app.route('/')
 def index():
@@ -79,10 +90,6 @@ def dashboard():
 
     # Renderuj szablon HTML z tweetami i komentarzami
     return render_template('dashboard.html', tweets=all_tweets_with_comments)
-
-if __name__ == '__main__':
-    app.run(debug=True)
-
 
 if __name__ == '__main__':
     app.run(debug=True)
