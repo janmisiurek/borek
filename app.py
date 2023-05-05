@@ -65,7 +65,7 @@ def dashboard():
         last_tweets = pd.DataFrame()
 
     # Pobierz nowe tweety
-    tweets = uti.scrap_tweets(driver)
+    tweets = uti.scrap_tweets()
     print(tweets)
 
     # Oznacz tweety jako nowe, jeśli nie istnieją w ostatnich tweetach

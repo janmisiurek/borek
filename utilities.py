@@ -12,10 +12,10 @@ import openai
 chromedriver_autoinstaller.install() 
 
 chrome_options = Options()
-chrome_options.add_argument("--headless")
-chrome_options.add_argument("--disable-gpu")
-chrome_options.add_argument("--no-sandbox")
-chrome_options.add_argument("--disable-dev-shm-usage")
+#chrome_options.add_argument("--headless")
+#chrome_options.add_argument("--disable-gpu")
+#chrome_options.add_argument("--no-sandbox")
+#chrome_options.add_argument("--disable-dev-shm-usage")
 
 driver = webdriver.Chrome(options=chrome_options)
 
@@ -56,10 +56,10 @@ def login_to_twitter():
     driver.switch_to.active_element.send_keys(Keys.ENTER)
     time.sleep(5)
     print("After logging in")
+    body = driver.find_element('tag name','body')
+    print(body.text)
 
-    return driver
-
-def scrap_tweets(driver):
+def scrap_tweets():
 
     # Open the list URL in a new tab
     print('opening new tab')
@@ -76,6 +76,8 @@ def scrap_tweets(driver):
     # scrap and convert tweets to pandas dataframe
     tweets = driver.find_elements("xpath", '//div[@data-testid]//article[@data-testid="tweet"]')
     print('raw tweets:', tweets)
+    body = driver.find_element('tag name','body')
+    print(body.text)
     data = []
     for tweet in tweets:
         try:
