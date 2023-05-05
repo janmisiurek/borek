@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for
-from utilities import login_to_twitter, scrap_tweets, add_comments_to_df
+import utilities as uti
 import openai
 import urllib
 import pandas as pd
@@ -31,7 +31,7 @@ def submit_login():
     os.environ['TWITTER_LIST_URL'] = list_url
 
     global driver
-    driver = login_to_twitter()
+    driver = uti.login_to_twitter()
 
     return redirect(url_for('dashboard'))
 
@@ -54,7 +54,7 @@ def dashboard():
         last_tweets = pd.DataFrame()
 
     # Pobierz nowe tweety
-    tweets = scrap_tweets(driver)
+    tweets = uti.scrap_tweets(driver)
 
     # Oznacz tweety jako nowe, jeśli nie istnieją w ostatnich tweetach
     tweets['is_new'] = tweets['Tweet_Link'].apply(
@@ -62,7 +62,7 @@ def dashboard():
     )
 
     # Dodaj komentarze tylko do nowych tweetów
-    new_tweets_with_comments = add_comments_to_df(tweets[tweets['is_new']])
+    new_tweets_with_comments = uti.add_comments_to_df(tweets[tweets['is_new']])
 
     # Połącz stare i nowe tweety z komentarzami
     all_tweets_with_comments = pd.merge(

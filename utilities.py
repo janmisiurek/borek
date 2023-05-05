@@ -29,13 +29,17 @@ def login_to_twitter():
     chrome_options.add_argument("--disable-dev-shm-usage")
     
    #driver = webdriver.Chrome(executable_path=chrome_driver_path, options=chrome_options)
+    print("Before initializing driver")
+
     driver = webdriver.Chrome(options=chrome_options)
     # ...
+    print("After initializing driver")
     driver.get('https://twitter.com/i/flow/login')
     driver.implicitly_wait(10)
     time.sleep(3)
 
     # login 
+    print("Before logging in")
     for _ in range(3):
         driver.switch_to.active_element.send_keys(Keys.TAB)
         time.sleep(0.5)  # Wait a bit between key presses
@@ -56,6 +60,7 @@ def login_to_twitter():
     time.sleep(1)
     driver.switch_to.active_element.send_keys(Keys.ENTER)
     time.sleep(5)
+    print("After logging in")
 
     return driver
 
