@@ -25,16 +25,17 @@
                 <th>Username</th>
                 <th>Date</th>
                 <th>Content</th>
-                <th>Tweet Link</th>
+                <th>Borek comment</th>
+                <th>Link</th>
             </tr>
         </thead>
         <tbody>
             {% for tweet in tweets.itertuples() %}
             <tr>
-                <td>{{ tweet.Username }}</td>
-                <td>{{ tweet.Date }}</td>
-                <td>{{ tweet.Content }}</td>
-                <td>{{ tweet.Comment }}</td>
+                <td>{% if tweet.is_new %}<b>{{ tweet.Username }}</b>{% else %}{{ tweet.Username }}{% endif %}</td>
+                <td>{% if tweet.is_new %}<b>{{ tweet.Date }}</b>{% else %}{{ tweet.Date }}{% endif %}</td>
+                <td>{% if tweet.is_new %}<b>{{ tweet.Content }}</b>{% else %}{{ tweet.Content }}{% endif %}</td>
+                <td>{% if tweet.is_new %}<b>{{ tweet.Comment }}</b>{% else %}{{ tweet.Comment }}{% endif %}</td>
                 <td><a href="{{ tweet.Tweet_Link }}" target="_blank" onclick="copyToClipboard(event, '{{ tweet.Comment|replace("'", "\\'")|replace('"', '\\"') }}')">View Tweet</a>
                 </td>
             </tr>

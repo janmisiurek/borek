@@ -104,6 +104,12 @@ def generate_comment(content):
     return generated_comment
 
 
-def add_comments_to_df(df):
-    df['Comment'] = df['Content'].apply(generate_comment)
+def add_comments_to_df(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+    df['Comment'] = ''
+
+    for index, row in df.iterrows():
+        if row['is_new']:
+            df.at[index, 'Comment'] = generate_comment(row['Content'])
+
     return df
