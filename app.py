@@ -50,6 +50,10 @@ def submit_login():
 
     return redirect(url_for('dashboard'))
 
+@app.route('/code')
+def code():
+    return render_template('code.html')
+
 @app.route('/submit_code', methods=['POST'])
 def submit_code():
     code = request.form['code']
