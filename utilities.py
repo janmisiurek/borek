@@ -91,6 +91,7 @@ def login_to_twitter():
         elif form_field =='check':
             x =+ 1
             print('------------redirecting to code form')
+            break
         else:
             print("Unknown form field")
             break
