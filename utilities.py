@@ -12,15 +12,48 @@ import openai
 chromedriver_autoinstaller.install() 
 
 chrome_options = Options()
-chrome_options.add_argument("--headless")
-chrome_options.add_argument("--disable-gpu")
-chrome_options.add_argument("--no-sandbox")
-chrome_options.add_argument("--disable-dev-shm-usage")
+#chrome_options.add_argument("--headless")
+#chrome_options.add_argument("--disable-gpu")
+#chrome_options.add_argument("--no-sandbox")
+#chrome_options.add_argument("--disable-dev-shm-usage")
 
 driver = webdriver.Chrome(options=chrome_options)
 
-def login_to_twitter():
+#sending strings by selenium
+def send(str):
+    driver.switch_to.active_element.send_keys(str)
+    time.sleep(0.5)
+    driver.switch_to.active_element.send_keys(Keys.ENTER)
+    time.sleep(2)
+
+def check_form():
+
+    body = driver.find_element('tag name','body')
+    lines = body.text.splitlines()
     
+    if not lines:  # Check if lines list is empty
+        return None
+    
+    first_line = lines[0].lower()
+
+    print('-----------',first_line)
+    if "zaloguj" in first_line or "login" in first_line:
+        return 'email'
+    
+    elif "numer" in first_line or "number" in first_line or "pomóż" in first_line: 
+        return 'number'
+    
+    elif "hasło" in first_line or "password" in first_line:
+        return 'password'
+    
+    elif "email" in first_line:
+        return print('check yours email')
+    
+    else:
+        print(body.text)
+
+
+def login_to_twitter():
 
     email = os.environ['EMAIL']
     username = os.environ['TWITTER_USERNAME']
@@ -31,43 +64,37 @@ def login_to_twitter():
     print("After initializing driver")
     driver.get('https://twitter.com/i/flow/login')
     driver.implicitly_wait(10)
-    time.sleep(3)
+    time.sleep(4)
 
     # login 
     print("Before logging in")
-    for _ in range(3):
-        driver.switch_to.active_element.send_keys(Keys.TAB)
-        time.sleep(0.5)  # Wait a bit between key presses
+    body = driver.find_element('tag name', 'body')
+    print(body.text)
 
-    print('------------sending email')
-    driver.switch_to.active_element.send_keys(email)
-    time.sleep(0.5)
-    driver.switch_to.active_element.send_keys(Keys.ENTER)
-    time.sleep(2)
-    body = driver.find_element('tag name','body')
-    print(body.text)
-    print('------------sending username')
-    driver.switch_to.active_element.send_keys(password)
-    time.sleep(0.5)
-    driver.switch_to.active_element.send_keys(Keys.ENTER)
-    time.sleep(2)
-    body = driver.find_element('tag name','body')
-    print(body.text)
-    print('------------sending password')
-    driver.switch_to.active_element.send_keys(number)
-    time.sleep(0.5)
-    driver.switch_to.active_element.send_keys(Keys.ENTER)
-    time.sleep(2)
-    body = driver.find_element('tag name','body')
-    print(body.text)
-    print('-------------sending number')
-    driver.switch_to.active_element.send_keys(number)
-    time.sleep(1)
-    driver.switch_to.active_element.send_keys(Keys.ENTER)
-    time.sleep(5)
+
+    form_field = check_form()
+    while form_field:
+        if form_field == 'email':
+            for _ in range(3):
+                driver.switch_to.active_element.send_keys(Keys.TAB)
+                time.sleep(0.5)  # Wait a bit between key presses
+            print('------------sending email')
+            send(email)
+        elif form_field == 'number':
+            print('------------sending number')
+            send(number)
+        elif form_field == 'password':
+            print('------------sending password')
+            send(password)
+        else:
+            print("Unknown form field")
+            break
+        form_field = check_form()
+
     print("After logging in")
-    body = driver.find_element('tag name','body')
-    print(body.text)
+    body = driver.find_element('tag name', 'body')
+    print(body.text.splitlines())
+
 
 def scrap_tweets():
 
