@@ -37,7 +37,7 @@ def check_form():
     first_line = lines[0].lower()
 
     print('-----------',first_line)
-    if "zaloguj" in first_line or "login" in first_line:
+    if "zaloguj" in first_line or "sign" in first_line:
         return 'email'
     
     elif "numer" in first_line or "number" in first_line or "pomóż" in first_line: 
