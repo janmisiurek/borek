@@ -44,6 +44,16 @@ def submit_login():
     global driver
     driver = uti.login_to_twitter()
 
+    if driver == 1:
+        return redirect(url_for('code'))
+    
+
+    return redirect(url_for('dashboard'))
+
+@app.route('/submit_code', methods=['POST'])
+def submit_code():
+    code = request.form['code']
+    uti.send(code)
     return redirect(url_for('dashboard'))
 
 @app.route('/dashboard')

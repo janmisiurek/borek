@@ -47,7 +47,7 @@ def check_form():
         return 'password'
     
     elif "email" in first_line:
-        return print('check yours email')
+        return 'check'
     
     else:
         print(body.text)
@@ -55,6 +55,8 @@ def check_form():
 
 def login_to_twitter():
 
+    #x for redirect in app.py
+    x = 0
     email = os.environ['EMAIL']
     username = os.environ['TWITTER_USERNAME']
     password = os.environ['TWITTER_PASSWORD']
@@ -86,6 +88,9 @@ def login_to_twitter():
         elif form_field == 'password':
             print('------------sending password')
             send(password)
+        elif form_field =='check':
+            x =+ 1
+            print('------------redirecting to code form')
         else:
             print("Unknown form field")
             break
@@ -95,6 +100,7 @@ def login_to_twitter():
     body = driver.find_element('tag name', 'body')
     print(body.text.splitlines())
 
+    return x
 
 def scrap_tweets():
 
