@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="icon" href="data:,">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+    <h1>Wprowadź kod wysłany na email.</h1>
+    <form action="{{ url_for('submit_code') }}" method="post">
+
+        <label for="username">Kod:</label>
+        <input type="text" id="code" name="code" required><br><br>
+
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
